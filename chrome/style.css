@@ -12,8 +12,26 @@
 
 .zekr {
    color: #cccccc;
-   vertical-align: 50%;
+   vertical-align: 20%;
    text-align: center;
    font-family: sans-serif;
    font-size: 300%;
+}
+
+.azan-container {
+   text-align: center;
+   font-family: sans-serif;
+   display: flex;
+   justify-content: center;
+   padding: 10px;
+   margin: 40px;
+}
+
+.next-azan{
+   width: 200px;
+   background-color: #cccccc;
+   color: #ffffff;
+   font-size: 20px;
+   padding: 10px;
+   border-radius: 10px;
 }
