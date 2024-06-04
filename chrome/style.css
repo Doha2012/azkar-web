@@ -27,11 +27,26 @@
    margin: 40px;
 }
 
-.next-azan{
-   width: 200px;
+.next-azan {
+   width: 150px;
    background-color: #cccccc;
    color: #ffffff;
    font-size: 20px;
    padding: 10px;
    border-radius: 10px;
+}
+
+.next-azan-details {
+   display: flex;
+   justify-content: space-around;
+   margin-bottom: 10px;
+}
+
+.daily-zekr {
+   position: fixed;
+   bottom: 0;
+   display: flex;
+   justify-content: space-around;
+   padding: 20px;
+   width: 100%;
 }
