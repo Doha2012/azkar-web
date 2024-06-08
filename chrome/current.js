@@ -10,12 +10,20 @@ const prayerNames = {
   'Maghrib': 'المغرب',
   'Sunrise': 'الشروق'
 };
-const currentTime = new Date();
+var currentTime = new Date();
 const ONE_HOUR = 60 * 60 * 1000;
 const ONE_MINUTE = 60 * 1000;
+var timingsResponse = {};
+const refreshCountDown = setInterval(updateClosestPrayerInfo, 1000);
 
-loadAzkar();
-loadPrayerTimes();
+
+chrome.storage.local.get(["prayerTimes"]).then((result) => {
+  timingsResponse = result.prayerTimes;
+  loadAzkar();
+  loadPrayerTimes();
+});
+
+
 
 function changeZekrRandomly() {
   const index = Math.floor(Math.random() * allAzkar.length);
@@ -33,28 +41,37 @@ function loadAzkar() {
 }
 
 function loadPrayerTimes() {
+  if (timingsResponse?.date?.readable && new Date(timingsResponse.date.readable).toDateString() === currentTime.toDateString()) {
+    updateClosestPrayerInfo();
+    return;
+  }
+  console.log("calling API....");
   const url = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}`;
   fetch(url)
       .then((response) => response.json()) 
       .then((json) => {
-        // console.log(json);
+        console.log(json);
         const timings = json.data.timings;
-        // todo save them locally every day
-        const result = getClosestPrayerInfo(timings);
-        document.getElementById("next-prayer-name").innerHTML = result.name;
-        document.getElementById("next-prayer-time").innerHTML = result.time;
-        document.getElementById("next-prayer-diff").innerHTML = result.diff;
+        storePrayerTimes(json.data);
+        timingsResponse = json.data;
+        updateClosestPrayerInfo();
+        console.log(timingsResponse);
   });
 }
 
-function getClosestPrayerInfo(timings) {
+function updateClosestPrayerInfo() {
+  if (!timingsResponse?.timings) {
+    return;
+  }
+  console.log('updating');
+  currentTime = new Date();
   const keyNames = Object.keys(prayerNames);
   var recentPrayer = '';
   var recentDiff = ONE_HOUR * 24; // max so it will be replaced in first round
-  for (k in timings) {
+  for (k in timingsResponse.timings) {
     if (keyNames.includes(k)) {
-      const diff = getTimeDiff(timings[k]);
-      if(diff < recentDiff) {
+      const diff = getTimeDiff(timingsResponse.timings[k]);
+      if(diff > 0 && diff < recentDiff) {
         recentDiff = diff;
         recentPrayer = k;
       }
@@ -67,11 +84,10 @@ function getClosestPrayerInfo(timings) {
   const min = Math.floor(diffx/ONE_MINUTE);
   diffx = diffx - (min * ONE_MINUTE);
   const sec = Math.floor(diffx/1000);
-  return {
-    name: prayerNames[recentPrayer],
-    time: timings[recentPrayer],
-    diff: `${hour.toLocaleString('en-US', {minimumIntegerDigits: 2})}:${min.toLocaleString('en-US', {minimumIntegerDigits: 2})}:${sec.toLocaleString('en-US', {minimumIntegerDigits: 2})}`,
-  };
+  const diff = `${formateTime(hour, min, sec)} باقي على الآذان`;
+  document.getElementById("next-prayer-name").innerHTML = prayerNames[recentPrayer];
+  document.getElementById("next-prayer-time").innerHTML = timingsResponse.timings[recentPrayer];
+  document.getElementById("next-prayer-diff").innerHTML = diff;
 }
 
 function getTimeDiff(time) {
@@ -81,5 +97,20 @@ function getTimeDiff(time) {
   temp.setMinutes(split[1]);
   temp.setSeconds(0);
   temp.setMilliseconds(0)
-  return Math.abs(temp.getTime() - currentTime.getTime());
+  return temp.getTime() - currentTime.getTime();
 }
+
+function formateTime(hour, min, sec) {
+ return   hour.toLocaleString('en-US', {minimumIntegerDigits: 2}) + ':' +
+              min.toLocaleString('en-US', {minimumIntegerDigits: 2}) + ':' +
+              sec.toLocaleString('en-US', {minimumIntegerDigits: 2});
+
+}
+
+function storePrayerTimes(value) {
+  chrome.storage.local.set({ prayerTimes: value }).then(() => {
+    console.log("Value is set", value);
+  });
+}
+
+

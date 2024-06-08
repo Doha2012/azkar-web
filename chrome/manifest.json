@@ -8,7 +8,7 @@
   ],
   "content_scripts": [
     {
-      "js": ["content.js"],
+      "js": ["current.js"],
       "css": ["style.css"],
       "matches": [
         "<all_urls>"
