@@ -84,7 +84,7 @@ function updateClosestPrayerInfo() {
   const min = Math.floor(diffx/ONE_MINUTE);
   diffx = diffx - (min * ONE_MINUTE);
   const sec = Math.floor(diffx/1000);
-  const diff = `${formateTime(hour, min, sec)} باقي على الآذان`;
+  const diff = `${formateTime(hour, min, sec)}`;
   document.getElementById("next-prayer-name").innerHTML = prayerNames[recentPrayer];
   document.getElementById("next-prayer-time").innerHTML = timingsResponse.timings[recentPrayer];
   document.getElementById("next-prayer-diff").innerHTML = diff;

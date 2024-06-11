@@ -1,3 +1,7 @@
+ body {
+   background-color: #252A31;
+ }
+ 
  .azkarContainer {
     position: fixed;
     z-index: 1000;
@@ -21,6 +25,7 @@
 .azan-container {
    text-align: center;
    font-family: sans-serif;
+   color: #ffffff;
    display: flex;
    justify-content: center;
    padding: 10px;
@@ -29,7 +34,7 @@
 
 .next-azan {
    width: 200px;
-   background-color: #cccccc;
+   background-color: rgba(225, 225, 225, 0.1);
    color: #ffffff;
    font-size: 20px;
    padding: 10px;
@@ -39,7 +44,12 @@
 .next-azan-details {
    display: flex;
    justify-content: space-around;
-   margin-bottom: 10px;
+   font-weight: bold;
+   /* background-color: rgba(225, 225, 225, 0.1); */
+}
+
+.time-till-next-azan {
+   padding-top: 15px;
 }
 
 .daily-zekr {
