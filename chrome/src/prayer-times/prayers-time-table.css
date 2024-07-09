@@ -1,0 +1,26 @@
+.prayers-time-table-container {
+    /* display: flex;
+    justify-content: space-around; */
+    position: absolute;
+    top: 160px;
+    right: 20px;
+}
+.prayers-time-table-container .bp5-card{
+    width: 180px;
+}
+.prayers-time-table-container table {
+    width: 100%;
+    font-size: 16px;
+}
+
+.prayers-time-table-container td {
+    padding: 5px;
+}
+
+.prayers-time-table-container td:first-child {
+    text-align: left;
+}
+
+.prayers-time-table-container td:last-child {
+    text-align: right;
+}
